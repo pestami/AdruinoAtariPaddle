@@ -110,7 +110,7 @@ void loop()
 {
   //===============================================================
   // Program SETUP
-   delay(100);  // slow down the program for debuging
+   //delay(100);  // slow down the program for debuging
    bool bDEBUG=true;
    //bool bDEBUG=False
    // if (bDEBUG) {        };
