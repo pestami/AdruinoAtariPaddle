@@ -18,7 +18,7 @@
 //Joystick_ Joystick;
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
-  2, 0,                  // Button Count, Hat Switch Count
+  11, 0,                  // Button Count, Hat Switch Count
   true, true, false,     // X and Y, but no Z Axis
   false, false, false,   // No Rx, Ry, or Rz
   false, false,          // No rudder or throttle
@@ -37,6 +37,19 @@ const int LED_RIGHT = 4;    // the number of the LED pin
 int Button_State_LEFT = 0;  // variable for reading the pushbutton status
 int Button_State_RIGHT = 0;
 
+//=================================================================
+const int Button_SEL = 8; 
+const int Button_STA = 9; 
+const int Button_A = 10; 
+const int Button_B = 11; 
+
+
+ int State_Button_SEL = 0; 
+ int State_Button_STA = 0; 
+ int State_Button_A = 0; 
+ int State_Button_B = 0; 
+//=================================================================
+
 int sensorPinR = A0;   // select the input pin for the potentiometer
 int ledPinR = 2;      // select the pin for the LED
 long sensorValueR = 0;  // variable to store the value coming from the sensor
@@ -54,7 +67,7 @@ long sensorValueLMIN = 1024;
 long nJoystickX = 0;
 long nJoystickY = 0;
 
-bool DEBUG=true;
+
 
 const int nJOY_Range = 127;  // the number of the pushbutton pin
 
@@ -87,7 +100,7 @@ void setup() {
   }
 //=================================================================
 //=================================================================== 
- bool LoadCycleRIGHT( long *LoopCounter,  long LoopCounterCieling, long Load) 
+ bool LoadCycleRIGHT( long *LoopCounter,  long LoopCounterCieling, long Load, bool bDEBUG_LED) 
  {
 	 bool bONOFF=0;
 	 
@@ -98,6 +111,8 @@ void setup() {
     }
     
     if ( *LoopCounter > LoopCounterCieling*Load/100) 
+
+
     {
          //if (bDEBUG) {  Serial.print("000000000000000000\n");}
         bONOFF=0;
@@ -105,13 +120,13 @@ void setup() {
     if ( *LoopCounter < LoopCounterCieling*Load/100) 
     {
         // if (bDEBUG) {  Serial.print("111111111111111111\n");}
-        bONOFF=1;
+        if (bDEBUG_LED) {bONOFF=1;}
     }    
    
     return bONOFF;
 }
   //=================================================================== 
- bool LoadCycleLEFT( unsigned  long *LoopCounter,  long LoopCounterCieling, long Load) 
+ bool LoadCycleLEFT( unsigned  long *LoopCounter,  long LoopCounterCieling, long Load, bool bDEBUG_LED) 
  {
 	 bool bONOFF=0;
 	 
@@ -129,7 +144,7 @@ void setup() {
     if ( *LoopCounter < LoopCounterCieling*Load/100) 
     {
          //if (bDEBUG) {  Serial.print("--------------------\n");}
-        bONOFF=1;
+        if (bDEBUG_LED) {bONOFF=1;}
     }    
    
     return bONOFF;
@@ -153,23 +168,23 @@ void loop()
   if (bDEBUG) {delay(100);}  // slow down the program for debuging
    //bool bDEBUG=False
    // if (bDEBUG) {        };
-
+   // bool bDEBUG_LED=true;
+    bool bDEBUG_LED=false;
+// if (bDEBUG_LED) {        };
  //===============================================================
   nLoopCounter++;
-  iResultLEFT=LoadCycleLEFT( &nLoopCounter,nPWM_period,nLoadLEFT);  
-  iResultRIGHT=LoadCycleRIGHT( &nLoopCounter,nPWM_period,nLoadRIGHT);       
+  iResultLEFT=LoadCycleLEFT( &nLoopCounter,nPWM_period,nLoadLEFT,bDEBUG_LED);  
+  iResultRIGHT=LoadCycleRIGHT( &nLoopCounter,nPWM_period,nLoadRIGHT,bDEBUG_LED);       
 //==================================================================
 // Fire Buutons READ & WRITE
 //==================================================================
   // read the state of the pushbutton value:
-  Button_State_LEFT = digitalRead(Button_LEFT);
-  Button_State_RIGHT = digitalRead(Button_RIGHT);
-
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  Button_State_LEFT = digitalRead(Button_LEFT);
   if (Button_State_LEFT == HIGH) 
         {
           // turn LED on:
-          digitalWrite(LED_LEFT, HIGH);
+          if (bDEBUG_LED) {digitalWrite(LED_LEFT, HIGH);}
           Joystick.setButton(0, 1);
         } else 
         {
@@ -177,10 +192,12 @@ void loop()
           digitalWrite(LED_LEFT, LOW);
           Joystick.setButton(0, 0);
         }
+//------------------------------------------------------------------
+  Button_State_RIGHT = digitalRead(Button_RIGHT);
   if (Button_State_RIGHT == HIGH) 
         {
           // turn LED on:
-          digitalWrite(LED_RIGHT, HIGH);
+          if (bDEBUG_LED) {digitalWrite(LED_RIGHT, HIGH);}
           Joystick.setButton(1, 1);
         } else 
         {
@@ -188,7 +205,43 @@ void loop()
           digitalWrite(LED_RIGHT, LOW);
           Joystick.setButton(1, 0);
         }
-
+//------------------------------------------------------------------
+  State_Button_SEL = digitalRead(Button_SEL);
+  if (State_Button_SEL == HIGH) 
+        {
+          Joystick.setButton(4, 1);
+        } else 
+        {
+          Joystick.setButton(4, 0);
+        }
+ //------------------------------------------------------------------
+  State_Button_STA = digitalRead(Button_STA);
+  if (State_Button_STA == HIGH) 
+        {
+          Joystick.setButton(5, 1);
+        } else 
+        {
+          Joystick.setButton(5, 0);
+        }
+  //------------------------------------------------------------------
+  State_Button_A = digitalRead(Button_A);
+  if (State_Button_A == HIGH) 
+        {
+          Joystick.setButton(6, 1);
+        } else 
+        {
+          Joystick.setButton(6, 0);
+        }
+        //------------------------------------------------------------------
+  State_Button_B = digitalRead(Button_B);
+  if (State_Button_B == HIGH) 
+        {
+          Joystick.setButton(7, 1);
+        } else 
+        {
+          Joystick.setButton(7, 0);
+        }
+//------------------------------------------------------------------    
   
   if (bDEBUG) {  Serial.print("\n========BUTTON============\n"); }
  
@@ -216,10 +269,10 @@ void loop()
   if (sensorValueL > sensorValueLMAX) {  sensorValueLMAX=sensorValueL;}
   if (sensorValueL < sensorValueLMIN) {  sensorValueLMIN=sensorValueL;}
 
-
  
  nJoystickX=(-nJOY_Range+nLoadLEFT*nJOY_Range/50);  // 50 = 100 / 2
  nJoystickY=(-nJOY_Range+nLoadRIGHT*nJOY_Range/50);
+
 
   if (bDEBUG) {  Serial.println(); }
   if (bDEBUG) {  Serial.print("nJoystickX:");}
