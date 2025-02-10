@@ -6,6 +6,10 @@
 
   make LED LIGHT when at ZERO
 
+
+
+
+
 */
 
 //=================================================================
@@ -20,40 +24,38 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
   false, false, false,   // No Rx, Ry, or Rz
   false, false,          // No rudder or throttle
   false, false, false);  // No accelerator, brake, or steering
-//=================================================================
-// Constant that maps the physical pin to the joystick button.
-const int pinToButtonMap = 9;
-// constants won't change. They're used here to set pin numbers:
-const int Button_LEFT = 7;  // the number of the pushbutton pin
-const int LED_LEFT = 5;    // the number of the LED pin
+//====================================================================================
+//=====HARDWARE MAPNG PINS============================================================
+const int Button_RIGHT = 7;  // the number of the pushbutton pin
+const int Button_LEFT = 6;  // the number of the pushbutton pin
 
-const int Button_RIGHT = 6;  // the number of the pushbutton pin
-const int LED_RIGHT = 4;    // the number of the LED pin
-
-// variables will change:
-int Button_State_LEFT = 0;  // variable for reading the pushbutton status
-int Button_State_RIGHT = 0;
-
-//=================================================================
 const int Button_SEL = 8; 
 const int Button_STA = 9; 
+
 const int Button_A = 10; 
 const int Button_B = 11; 
 
+int LED_RIGHT_PW = 2;      // select the pin for the LED
+int LED_LEFT_PW = 3;      // select the pin for the LED
+const int LED_RIGHT = 4;    // the number of the LED pin
+const int LED_LEFT = 5;    // the number of the LED pin
+
+//======SOFRWARE VARIABLES ===========================================================
+int Button_State_LEFT = 0;  // variable for reading the pushbutton status
+int Button_State_RIGHT = 0;
+
  int State_Button_SEL = 0; 
  int State_Button_STA = 0; 
+
  int State_Button_A = 0; 
  int State_Button_B = 0; 
+
 //=================================================================
-
-int sensorPinR = A0;   // select the input pin for the potentiometer
-int LED_RIGHT_PW = 2;      // select the pin for the LED
 long sensorValueR = 0;  // variable to store the value coming from the sensor
-
-int sensorPinL = A1;   // select the input pin for the potentiometer
-int LED_LEFT_PW = 3;      // select the pin for the LED
 long sensorValueL = 0;  // variable to store the value coming from the sensor
-long sensorMinValue= 300;
+
+int sensorPinR = A1;  
+int sensorPinL = A0;   // select the input pin for the potentiometer
 
 long sensorValueRMAX = 0;
 long sensorValueRMIN = 1024;
@@ -106,7 +108,7 @@ void loop()
   //===============================================================
   // Program SETUP  
 
-  bool bDEBUG=false;
+  bool bDEBUG=true;
   bool bDEBUG_LED=true;
 
   if (bDEBUG) {delay(100);}  // slow down the program for debuging 
@@ -116,32 +118,33 @@ void loop()
 //==================================================================
   // read the state of the pushbutton value:
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  //--------FIRE----------------------------------------------------------
   Button_State_LEFT = digitalRead(Button_LEFT);
   if (Button_State_LEFT == HIGH) 
         {
           // turn LED on:
           if (bDEBUG_LED) {digitalWrite(LED_LEFT, HIGH);}
-          Joystick.setButton(0, 1);
+          Joystick.setButton(1, 1);
         } else 
         {
           // turn LED off:
          if (bDEBUG_LED) {digitalWrite(LED_LEFT, LOW);}
-          Joystick.setButton(0, 0);
+          Joystick.setButton(1, 0);
         }
-//------------------------------------------------------------------
+//-----------FIRE-------------------------------------------------------
   Button_State_RIGHT = digitalRead(Button_RIGHT);
   if (Button_State_RIGHT == HIGH) 
         {
           // turn LED on:
           if (bDEBUG_LED) {digitalWrite(LED_RIGHT, HIGH);}
-          Joystick.setButton(1, 1);
+          Joystick.setButton(0, 1);
         } else 
         {
           // turn LED off:
           if (bDEBUG_LED) {digitalWrite(LED_RIGHT, LOW);}
-          Joystick.setButton(1, 0);
+          Joystick.setButton(0, 0);
         }
-//------------------------------------------------------------------
+//-------------MENU-----------------------------------------------------
   State_Button_SEL = digitalRead(Button_SEL);
   if (State_Button_SEL == HIGH) 
         {
@@ -195,26 +198,28 @@ void loop()
    // read the value from the sensor:
   sensorValueR = analogRead(sensorPinR);
   sensorValueL = analogRead(sensorPinL);
-
-  if (sensorValueR > sensorValueRMAX) {  sensorValueRMAX=sensorValueR;}  // initial 0
-  if (sensorValueR < sensorValueRMIN) {  sensorValueRMIN=sensorValueR;}   // initial 1024
-
-  if (sensorValueL > sensorValueLMAX) {  sensorValueLMAX=sensorValueL;}
-  if (sensorValueL < sensorValueLMIN) {  sensorValueLMIN=sensorValueL;}
-
- 
- nJoystickX=(-nJOY_Range+nLoadLEFT*nJOY_Range/50);  // 50 = 100 / 2
- nJoystickY=(-nJOY_Range+nLoadRIGHT*nJOY_Range/50);
-
-  Joystick.setXAxis( 1 * nJoystickX);
-  Joystick.setYAxis(1 * nJoystickY);
   
-  sensorMinValue=300;
+  sensorValueRMAX=0; // initial 0
+  sensorValueRMIN=1024;   // initial 1024
+ 
+ nJoystickY=(-nJOY_Range+nLoadLEFT*nJOY_Range/50);  // 50 = 100 / 2
+ nJoystickX=(-nJOY_Range+nLoadRIGHT*nJOY_Range/50);
+ 
   nLoadLEFT=((sensorValueL-sensorValueLMIN)*100/(sensorValueLMAX-sensorValueLMIN));  // 1024 * 100 = 102`400
   nLoadRIGHT=((sensorValueR-sensorValueRMIN)*100/(sensorValueRMAX-sensorValueRMIN)) ;
 
-  if (nLoadRIGHT > 40 && nLoadRIGHT < 60) {  digitalWrite(LED_RIGHT, HIGH);} else{digitalWrite(LED_RIGHT, LOW);}
-  if (nLoadLEFT > 40 && nLoadLEFT <60) {  digitalWrite(LED_LEFT, HIGH);} else{digitalWrite(LED_LEFT, LOW);}
+  if (nLoadRIGHT > 45 && nLoadRIGHT < 55) 
+  {  digitalWrite(LED_RIGHT, HIGH);Joystick.setXAxis( 0 * nJoystickX);} 
+  else
+  {digitalWrite(LED_RIGHT, LOW);Joystick.setXAxis( 1 * nJoystickX);}
+
+  if (nLoadLEFT > 45 && nLoadLEFT <55) 
+  {  digitalWrite(LED_LEFT, HIGH);Joystick.setYAxis(0 * nJoystickY);} 
+  else
+  {digitalWrite(LED_LEFT, LOW);Joystick.setYAxis(1 * nJoystickY);}
+
+  
+
 
 //============================================================================================
   if (bDEBUG) {  Serial.print("\n========BUTTON============\n"); }
@@ -227,22 +232,10 @@ void loop()
   if (bDEBUG) {  Serial.print("\n========PADDLE============\n");}
 
  if (bDEBUG) {  Serial.println(); }
-  if (bDEBUG) {  Serial.print("nJoystickX:");}
-  if (bDEBUG) {  Serial.print(nJoystickX);}
-  if (bDEBUG) {  Serial.print("  nJoystickY:");}
+  if (bDEBUG) {  Serial.print("nJoystickY:");}
   if (bDEBUG) {  Serial.print(nJoystickY);}
-
- if (bDEBUG) {  Serial.println(); }
-  if (bDEBUG) {  Serial.print("sensorValueLMIN:");}
-  if (bDEBUG) {  Serial.print(sensorValueLMIN);}
-  if (bDEBUG) {  Serial.print("  sensorValueLMAX:");}
-  if (bDEBUG) {  Serial.print(sensorValueLMAX);}
-
- if (bDEBUG) {  Serial.println(); }
-  if (bDEBUG) {  Serial.print("sensorValueRMIN:");}
-  if (bDEBUG) {  Serial.print(sensorValueRMIN);}
-  if (bDEBUG) {  Serial.print("  sensorValueRMAX:");}
-  if (bDEBUG) {  Serial.print(sensorValueRMAX);}
+  if (bDEBUG) {  Serial.print("   nJoystickX:");}
+  if (bDEBUG) {  Serial.print(nJoystickX);}
 
  if (bDEBUG) {  Serial.println(); }
   if (bDEBUG) {  Serial.print("10 BIT L:");}
