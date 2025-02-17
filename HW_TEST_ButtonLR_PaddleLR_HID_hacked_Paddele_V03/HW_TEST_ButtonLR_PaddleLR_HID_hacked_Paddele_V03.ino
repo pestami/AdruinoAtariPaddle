@@ -19,7 +19,7 @@
 //Joystick_ Joystick;
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
-  6, 0,                  // Button Count, Hat Switch Count
+  7, 0,                  // Button Count, Hat Switch Count
   true, true, false,     // X and Y, but no Z Axis
   false, false, false,   // No Rx, Ry, or Rz
   false, false,          // No rudder or throttle
@@ -35,6 +35,8 @@ const int Button_STA = 9;
 const int Button_A = 10; 
 const int Button_B = 11; 
 
+const int Button_H = 12; 
+
 int LED_RIGHT_PW = 2;      // select the pin for the LED
 int LED_LEFT_PW = 3;      // select the pin for the LED
 const int LED_RIGHT = 4;    // the number of the LED pin
@@ -49,6 +51,7 @@ int Button_State_RIGHT = 0;
 
  int State_Button_A = 0; 
  int State_Button_B = 0; 
+ int State_Button_H= 0; 
 
 //=================================================================
 long sensorValueR = 0;  // variable to store the value coming from the sensor
@@ -86,6 +89,7 @@ void setup() {
   pinMode(Button_STA, INPUT);// initialize the pushbutton pin as an input:
   pinMode(Button_A, INPUT);// initialize the pushbutton pin as an input:
   pinMode(Button_B, INPUT);// initialize the pushbutton pin as an input:
+   pinMode(Button_H, INPUT);// initialize the pushbutton pin as an input:
 
 	// Initialize Joystick Library
 	Joystick.begin();
@@ -188,6 +192,17 @@ void loop()
           Joystick.setButton(5, 0);
           if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, LOW);}
         }
+        //------------------------------------------------------------------
+  State_Button_H = digitalRead(Button_H);
+  if (State_Button_H == HIGH) 
+        {
+          Joystick.setButton(6, 1);
+          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, HIGH);}
+        } else 
+        {
+          Joystick.setButton(6, 0);
+          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, LOW);}
+        }
 //------------------------------------------------------------------   
 
 //==================================================================
@@ -208,12 +223,14 @@ void loop()
   nLoadLEFT=((sensorValueL-sensorValueLMIN)*100/(sensorValueLMAX-sensorValueLMIN));  // 1024 * 100 = 102`400
   nLoadRIGHT=((sensorValueR-sensorValueRMIN)*100/(sensorValueRMAX-sensorValueRMIN)) ;
 
-  if (nLoadRIGHT > 45 && nLoadRIGHT < 55) 
+ 
+
+  if (nLoadRIGHT > 40 && nLoadRIGHT < 59) 
   {  digitalWrite(LED_RIGHT, HIGH);Joystick.setXAxis( 0 * nJoystickX);} 
   else
   {digitalWrite(LED_RIGHT, LOW);Joystick.setXAxis( 1 * nJoystickX);}
 
-  if (nLoadLEFT > 45 && nLoadLEFT <55) 
+  if (nLoadLEFT > 40 && nLoadLEFT <59) 
   {  digitalWrite(LED_LEFT, HIGH);Joystick.setYAxis(0 * nJoystickY);} 
   else
   {digitalWrite(LED_LEFT, LOW);Joystick.setYAxis(1 * nJoystickY);}
