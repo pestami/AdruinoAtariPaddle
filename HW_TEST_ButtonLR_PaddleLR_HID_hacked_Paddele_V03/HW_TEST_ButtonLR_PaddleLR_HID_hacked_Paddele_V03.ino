@@ -223,17 +223,19 @@ void loop()
   nLoadLEFT=((sensorValueL-sensorValueLMIN)*100/(sensorValueLMAX-sensorValueLMIN));  // 1024 * 100 = 102`400
   nLoadRIGHT=((sensorValueR-sensorValueRMIN)*100/(sensorValueRMAX-sensorValueRMIN)) ;
 
+digitalWrite(LED_RIGHT, LOW);Joystick.setXAxis( 1 * nJoystickX);
+digitalWrite(LED_LEFT, LOW);Joystick.setYAxis(1 * nJoystickY);
  
 
-  if (nLoadRIGHT > 40 && nLoadRIGHT < 59) 
-  {  digitalWrite(LED_RIGHT, HIGH);Joystick.setXAxis( 0 * nJoystickX);} 
-  else
-  {digitalWrite(LED_RIGHT, LOW);Joystick.setXAxis( 1 * nJoystickX);}
+  // if (nLoadRIGHT > 40 && nLoadRIGHT < 59) 
+  // {  digitalWrite(LED_RIGHT, HIGH);Joystick.setXAxis( 0 * nJoystickX);} 
+  // else
+  // {digitalWrite(LED_RIGHT, LOW);Joystick.setXAxis( 1 * nJoystickX);}
 
-  if (nLoadLEFT > 40 && nLoadLEFT <59) 
-  {  digitalWrite(LED_LEFT, HIGH);Joystick.setYAxis(0 * nJoystickY);} 
-  else
-  {digitalWrite(LED_LEFT, LOW);Joystick.setYAxis(1 * nJoystickY);}
+  // if (nLoadLEFT > 40 && nLoadLEFT <59) 
+  // {  digitalWrite(LED_LEFT, HIGH);Joystick.setYAxis(0 * nJoystickY);} 
+  // else
+  // {digitalWrite(LED_LEFT, LOW);Joystick.setYAxis(1 * nJoystickY);}
 
   
 
