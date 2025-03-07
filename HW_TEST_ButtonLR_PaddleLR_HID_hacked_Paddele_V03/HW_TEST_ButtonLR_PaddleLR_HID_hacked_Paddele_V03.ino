@@ -36,6 +36,7 @@ const int Button_A = 10;
 const int Button_B = 11; 
 
 const int Button_H = 12; 
+const int Button_FLAG = 13; 
 
 int LED_RIGHT_PW = 2;      // select the pin for the LED
 int LED_LEFT_PW = 3;      // select the pin for the LED
@@ -52,6 +53,7 @@ int Button_State_RIGHT = 0;
  int State_Button_A = 0; 
  int State_Button_B = 0; 
  int State_Button_H= 0; 
+ int State_Button_FLAG= 0; 
 
 //=================================================================
 long sensorValueR = 0;  // variable to store the value coming from the sensor
@@ -90,6 +92,7 @@ void setup() {
   pinMode(Button_A, INPUT);// initialize the pushbutton pin as an input:
   pinMode(Button_B, INPUT);// initialize the pushbutton pin as an input:
    pinMode(Button_H, INPUT);// initialize the pushbutton pin as an input:
+   pinMode(Button_FLAG, INPUT);// initialize the pushbutton pin as an input:
 
 	// Initialize Joystick Library
 	Joystick.begin();
