@@ -2,6 +2,7 @@
 (REPLACE .000000 ; )
 (REPLACE Z-5; Z-5 S1000 	(---Laser 100% ON))
 (REPLACE Z4 ; Z4 S0 	(---Laser 00% OFF))
+(REPLACE F0 ; F1000  or F750 )
 (======CODE MANDATORY============)
 M3 S0  (M03 – Spindle on in a clockwise)
 (================================)
