@@ -1,3 +1,5 @@
+#include <Joystick.h>
+
 // #include <HID.h>
 
 /*
@@ -23,6 +25,8 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
   false, false, false,   // No Rx, Ry, or Rz
   false, false,          // No rudder or throttle
   false, false, false);  // No accelerator, brake, or steering
+
+  
 //=================================================================
 // Constant that maps the physical pin to the joystick button.
 const int pinToButtonMap = 9;
