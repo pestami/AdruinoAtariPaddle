@@ -1,13 +1,10 @@
 // #include <HID.h>
-
-
 /*
   HW_TEST_ButtonLR_PaddleLR_HID_V02
 
   make LED LIGHT when at ZERO
 
 */
-
 //=================================================================
 #include <Joystick.h>
 
@@ -21,37 +18,35 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
   false, false,          // No rudder or throttle
   false, false, false);  // No accelerator, brake, or steering
 //=================================================================
-// Constant that maps the physical pin to the joystick button.
-const int pinToButtonMap = 9;
 // constants won't change. They're used here to set pin numbers:
-const int Button_LEFT = 7;  // the number of the pushbutton pin
-const int LED_LEFT = 5;    // the number of the LED pin
+const int Button_LEFT_A = 8;  // the number of the pushbutton pin
+const int LED_LEFT = 10;    // the number of the LED pin
 
-const int Button_RIGHT = 6;  // the number of the pushbutton pin
-const int LED_RIGHT = 4;    // the number of the LED pin
+const int Button_RIGHT_A = 9;  // the number of the pushbutton pin
+const int LED_RIGHT = 14;    // the number of the LED pin
 
 // variables will change:
 int Button_State_LEFT = 0;  // variable for reading the pushbutton status
 int Button_State_RIGHT = 0;
 
 //=================================================================
-const int Button_SEL = 8; 
-const int Button_STA = 9; 
-const int Button_A = 10; 
-const int Button_B = 11; 
+const int Button_SEL = 4; 
+const int Button_STA = 6; 
+const int BUTTON_X = 2; 
+const int BUTTON_Y = 3; 
 
  int State_Button_SEL = 0; 
  int State_Button_STA = 0; 
- int State_Button_A = 0; 
- int State_Button_B = 0; 
+ int State_BUTTON_X = 0; 
+ int State_BUTTON_Y = 0; 
 //=================================================================
 
 int sensorPinR = A0;   // select the input pin for the potentiometer
-int LED_RIGHT_PW = 2;      // select the pin for the LED
+int LED_MIDDLE = 16;      // select the pin for the LED
 long sensorValueR = 0;  // variable to store the value coming from the sensor
 
 int sensorPinL = A1;   // select the input pin for the potentiometer
-int LED_LEFT_PW = 3;      // select the pin for the LED
+int LED_MIDDLE = 16;      // select the pin for the LED
 long sensorValueL = 0;  // variable to store the value coming from the sensor
 long sensorMinValue= 300;
 
@@ -74,16 +69,16 @@ void setup() {
 
   pinMode(LED_LEFT, OUTPUT);// initialize the LED pin as an output:  
   pinMode(LED_RIGHT, OUTPUT);// initialize the LED pin as an output:  
-  pinMode(LED_RIGHT_PW, OUTPUT);
-  pinMode(LED_LEFT_PW, OUTPUT);
+  pinMode(LED_MIDDLE, OUTPUT);
+  pinMode(LED_MIDDLE, OUTPUT);
  
-  pinMode(Button_LEFT, INPUT);// initialize the pushbutton pin as an input:  
-  pinMode(Button_RIGHT, INPUT);// initialize the pushbutton pin as an input:
+  pinMode(Button_LEFT_A, INPUT);// initialize the pushbutton pin as an input:  
+  pinMode(Button_RIGHT_A, INPUT);// initialize the pushbutton pin as an input:
 
   pinMode(Button_SEL, INPUT);// initialize the pushbutton pin as an input:
   pinMode(Button_STA, INPUT);// initialize the pushbutton pin as an input:
-  pinMode(Button_A, INPUT);// initialize the pushbutton pin as an input:
-  pinMode(Button_B, INPUT);// initialize the pushbutton pin as an input:
+  pinMode(BUTTON_X, INPUT);// initialize the pushbutton pin as an input:
+  pinMode(BUTTON_Y, INPUT);// initialize the pushbutton pin as an input:
 
 	// Initialize Joystick Library
 	Joystick.begin();
@@ -116,7 +111,7 @@ void loop()
 //==================================================================
   // read the state of the pushbutton value:
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-  Button_State_LEFT = digitalRead(Button_LEFT);
+  Button_State_LEFT = digitalRead(Button_LEFT_A);
   if (Button_State_LEFT == HIGH) 
         {
           // turn LED on:
@@ -129,7 +124,7 @@ void loop()
           Joystick.setButton(0, 0);
         }
 //------------------------------------------------------------------
-  Button_State_RIGHT = digitalRead(Button_RIGHT);
+  Button_State_RIGHT = digitalRead(Button_RIGHT_A);
   if (Button_State_RIGHT == HIGH) 
         {
           // turn LED on:
@@ -146,44 +141,44 @@ void loop()
   if (State_Button_SEL == HIGH) 
         {
           Joystick.setButton(2, 1);
-          if (bDEBUG_LED) {digitalWrite(LED_LEFT_PW, HIGH);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
           Joystick.setButton(2, 0);
-          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, LOW);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
  //------------------------------------------------------------------
   State_Button_STA = digitalRead(Button_STA);
   if (State_Button_STA == HIGH) 
         {
           Joystick.setButton(3, 1);
-          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, HIGH);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
           Joystick.setButton(3, 0);
-          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, LOW);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
   //------------------------------------------------------------------
-  State_Button_A = digitalRead(Button_A);
-  if (State_Button_A == HIGH) 
+  State_BUTTON_X = digitalRead(BUTTON_X);
+  if (State_BUTTON_X == HIGH) 
         {
           Joystick.setButton(4, 1);
-          if (bDEBUG_LED) {digitalWrite(LED_LEFT_PW, HIGH);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
           Joystick.setButton(4, 0);
-          if (bDEBUG_LED) {digitalWrite(LED_LEFT_PW, LOW);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
         //------------------------------------------------------------------
-  State_Button_B = digitalRead(Button_B);
-  if (State_Button_B == HIGH) 
+  State_BUTTON_Y = digitalRead(BUTTON_Y);
+  if (State_BUTTON_Y == HIGH) 
         {
           Joystick.setButton(5, 1);
-          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, HIGH);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
           Joystick.setButton(5, 0);
-          if (bDEBUG_LED) {digitalWrite(LED_RIGHT_PW, LOW);}
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
 //------------------------------------------------------------------   
 

@@ -1,3 +1,5 @@
+#include <HID.h>
+
 /*
   Joystick.h
 
