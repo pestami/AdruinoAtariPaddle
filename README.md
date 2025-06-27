@@ -3,4 +3,4 @@ All information for the development of an Atari-Paddle to USB game controller in
 
 ## AtariPaddle
 
-<img src="png/AtariPaddle.png" width="400" height="200">
+<img src="PNG/AtariPaddle.png" width="400" height="200">
