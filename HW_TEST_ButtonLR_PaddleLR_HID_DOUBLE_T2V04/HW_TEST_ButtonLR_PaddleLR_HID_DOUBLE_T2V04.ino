@@ -3,21 +3,24 @@
   HW_TEST_ButtonLR_PaddleLR_HID_V02
 
   make LED LIGHT when at ZERO
-  only one joysic instance
 
 */
 //=================================================================
 #include <Joystick.h>
-
-// Create the Joystick
-//Joystick_ Joystick;
-
+#define JOYSTICK_COUNT 2
+// Create the Joystick*
+/*
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
-  6, 0,                  // Button Count, Hat Switch Count
+  7, 0,                  // Button Count, Hat Switch Count
   true, true, false,     // X and Y, but no Z Axis
-  false, false, false,   // No Rx, Ry, or Rz
+  true, true, false,   // No Rx, Ry, or Rz
   false, false,          // No rudder or throttle
   false, false, false);  // No accelerator, brake, or steering
+*/
+Joystick_ Joystick[JOYSTICK_COUNT] = {
+  Joystick_(0x03, JOYSTICK_TYPE_GAMEPAD, 7, 0, true, false, false, false, false, false, false, false, false, false, false),
+  Joystick_(0x04, JOYSTICK_TYPE_JOYSTICK, 1, 0, true, false, false, false, false, false, false, false, false, false, false)
+};
 //=================================================================
 // constants won't change. They're used here to set pin numbers:
 const int Button_LEFT_A = 8;  // the number of the pushbutton pin
@@ -35,11 +38,13 @@ const int Button_SEL = 4;
 const int Button_STA = 6; 
 const int BUTTON_X = 2; 
 const int BUTTON_Y = 3; 
+const int BUTTON_H = 5; 
 
  int State_Button_SEL = 0; 
  int State_Button_STA = 0; 
  int State_BUTTON_X = 0; 
  int State_BUTTON_Y = 0; 
+ int State_BUTTON_H = 0; 
 //=================================================================
 
 int sensorPinR = A0;   // select the input pin for the potentiometer
@@ -65,8 +70,11 @@ const int nJOY_Range = 127;  // the number of the pushbutton pin
 void setup() {
   
     // Set Range Values
-  Joystick.setXAxisRange(-nJOY_Range, nJOY_Range);
-  Joystick.setYAxisRange(-nJOY_Range, nJOY_Range);
+  Joystick[0].setXAxisRange(-nJOY_Range, nJOY_Range);
+  Joystick[0].setYAxisRange(-nJOY_Range, nJOY_Range);
+
+  Joystick[1].setXAxisRange(-nJOY_Range, nJOY_Range);
+  Joystick[1].setYAxisRange(-nJOY_Range, nJOY_Range);
 
   pinMode(LED_LEFT, OUTPUT);// initialize the LED pin as an output:  
   pinMode(LED_RIGHT, OUTPUT);// initialize the LED pin as an output:  
@@ -80,9 +88,11 @@ void setup() {
   pinMode(Button_STA, INPUT);// initialize the pushbutton pin as an input:
   pinMode(BUTTON_X, INPUT);// initialize the pushbutton pin as an input:
   pinMode(BUTTON_Y, INPUT);// initialize the pushbutton pin as an input:
+  pinMode(BUTTON_H, INPUT);// initialize the pushbutton pin as an input:
 
 	// Initialize Joystick Library
-	Joystick.begin();
+  Joystick[0].begin();
+  Joystick[1].begin();
 
   //Initiate Serial communication.
   Serial.begin(9600); 
@@ -117,12 +127,12 @@ void loop()
         {
           // turn LED on:
           if (bDEBUG_LED) {digitalWrite(LED_LEFT, HIGH);}
-          Joystick.setButton(0, 1);
+          Joystick[0].setButton(0, 1);
         } else 
         {
           // turn LED off:
          if (bDEBUG_LED) {digitalWrite(LED_LEFT, LOW);}
-          Joystick.setButton(0, 0);
+          Joystick[0].setButton(0, 0);
         }
 //------------------------------------------------------------------
   Button_State_RIGHT = digitalRead(Button_RIGHT_A);
@@ -130,59 +140,69 @@ void loop()
         {
           // turn LED on:
           if (bDEBUG_LED) {digitalWrite(LED_RIGHT, HIGH);}
-          Joystick.setButton(1, 1);
+          Joystick[0].setButton(1, 1);
         } else 
         {
           // turn LED off:
           if (bDEBUG_LED) {digitalWrite(LED_RIGHT, LOW);}
-          Joystick.setButton(1, 0);
+          Joystick[0].setButton(1, 0);
         }
 //------------------------------------------------------------------
   State_Button_SEL = digitalRead(Button_SEL);
   if (State_Button_SEL == HIGH) 
         {
-          Joystick.setButton(2, 1);
+          Joystick[0].setButton(2, 1);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
-          Joystick.setButton(2, 0);
+          Joystick[0].setButton(2, 0);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
  //------------------------------------------------------------------
   State_Button_STA = digitalRead(Button_STA);
   if (State_Button_STA == HIGH) 
         {
-          Joystick.setButton(3, 1);
+          Joystick[0].setButton(3, 1);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
-          Joystick.setButton(3, 0);
+          Joystick[0].setButton(3, 0);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
   //------------------------------------------------------------------
   State_BUTTON_X = digitalRead(BUTTON_X);
   if (State_BUTTON_X == HIGH) 
         {
-          Joystick.setButton(4, 1);
+          Joystick[0].setButton(4, 1);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
-          Joystick.setButton(4, 0);
+          Joystick[0].setButton(4, 0);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
         //------------------------------------------------------------------
   State_BUTTON_Y = digitalRead(BUTTON_Y);
   if (State_BUTTON_Y == HIGH) 
         {
-          Joystick.setButton(5, 1);
+          Joystick[0].setButton(5, 1);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
         } else 
         {
-          Joystick.setButton(5, 0);
+          Joystick[0].setButton(5, 0);
           if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
         }
 //------------------------------------------------------------------   
-
+  State_BUTTON_H = digitalRead(BUTTON_H);
+  if (State_BUTTON_H == HIGH) 
+        {
+          Joystick[0].setButton(6, 1);
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, HIGH);}
+        } else 
+        {
+          Joystick[0].setButton(6, 0);
+          if (bDEBUG_LED) {digitalWrite(LED_MIDDLE, LOW);}
+        }
+//------------------------------------------------------------------   
 //==================================================================
 // Analog Paddle
 // Long variables are extended size variables for number storage, and store 32 bits (4 bytes), from -2,147,483,648 to 2,147,483,647.
@@ -202,8 +222,8 @@ void loop()
  nJoystickX=(-nJOY_Range+nLoadLEFT*nJOY_Range/50);  // 50 = 100 / 2
  nJoystickY=(-nJOY_Range+nLoadRIGHT*nJOY_Range/50);
 
-  Joystick.setXAxis( 1 * nJoystickX);
-  Joystick.setYAxis(1 * nJoystickY);
+  Joystick[0].setXAxis( 1 * nJoystickX);
+  Joystick[1].setYAxis(1 * nJoystickY);
   
   sensorMinValue=300;
   nLoadLEFT=((sensorValueL-sensorValueLMIN)*100/(sensorValueLMAX-sensorValueLMIN));  // 1024 * 100 = 102`400
