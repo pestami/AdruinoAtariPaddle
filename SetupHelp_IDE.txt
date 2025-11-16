@@ -5,3 +5,10 @@ $ sudo adduser pi dialout
 $ sudo chmod a+rw /dev/ttyACM0
 
 //===============================================
+2025 11 12
+/dev/ttyACM0  
+udo usermod -a -G dialout pi
+ls /dev/tty*
+
+
+

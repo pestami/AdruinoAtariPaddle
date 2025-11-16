@@ -3,6 +3,10 @@
 /*
   Button  
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/Button
+
+ if mo serialoutput
+  sudo usermod -a -G dialout $USER
+
 */
 
 // constants won't change. They're used here to set pin numbers:

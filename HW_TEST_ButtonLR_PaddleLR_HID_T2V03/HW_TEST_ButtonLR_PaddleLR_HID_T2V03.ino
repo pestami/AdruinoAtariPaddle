@@ -104,7 +104,7 @@ void loop()
   //===============================================================
   // Program SETUP  
 
-  bool bDEBUG=false;
+  bool bDEBUG=true;
   bool bDEBUG_LED=true;
 
   if (bDEBUG) {delay(100);}  // slow down the program for debuging 
