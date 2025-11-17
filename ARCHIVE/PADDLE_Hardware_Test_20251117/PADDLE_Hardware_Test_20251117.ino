@@ -28,7 +28,7 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
 */
 Joystick_ Joystick[JOYSTICK_COUNT] = {
   Joystick_(0x03, JOYSTICK_TYPE_GAMEPAD, 7, 0, true, false, false, false, false, false, false, false, false, false, false),
-  Joystick_(0x04, JOYSTICK_TYPE_JOYSTICK, 1, 0, true, false, false, false, false, false, false, false, false, false, false)
+  Joystick_(0x04, JOYSTICK_TYPE_JOYSTICK, 7, 0, true, false, false, false, false, false, false, false, false, false, false)
 };
 //====================================================================================
 //=====HARDWARE MAPNG PINS============================================================
@@ -61,7 +61,7 @@ int State_Button_Y = 0;
 int State_Button_H = 0;
 int State_Button_FLAG = 0;
 
-//=================================================================
+//=========  pinMode(LED_MIDDLE, OUTPUT);========================================================
 long sensorValueR = 0;  // variable to store the value coming from the sensor
 long sensorValueL = 0;  // variable to store the value coming from the sensor
 
@@ -97,44 +97,64 @@ int Timer_Loop = 0;
 //===================================================================
 
 void sendtoserial(bool bDEBUG) {
-  Serial.print("\n========BUTTON============\n");
+  Serial.print("\n========BUTTON====================================================================================================\n");
   Serial.print("LEFT:");
   Serial.print(Button_State_LEFT);
   Serial.print("   RIGHT:");
   Serial.print(Button_State_RIGHT);
 
-  Serial.print("\n========PADDLE============\n");
-
-  Serial.println();
-  Serial.print("nJoystickY:");
+  Serial.print("   nJoystickY:");
   Serial.print(nJoystickY);
   Serial.print("   nJoystickX:");
   Serial.print(nJoystickX);
 
   Serial.println();
-  Serial.print("10 BIT L:");
-  Serial.print(sensorValueL);
-  Serial.print("\t");
-  Serial.print("10 BIT R:");
-  Serial.print(sensorValueR);
+  //Serial.print("A1  A2  X  Y  H  SEL PLAY ");
 
-  Serial.println();
+  Serial.print(" A1:" + String(Button_State_LEFT) );
+  Serial.print(" A2:" +  String(Button_State_RIGHT ));
 
-  Serial.print("% LOAD LEFT:");
-  Serial.print(nLoadLEFT);
-  Serial.print("\t");
-  Serial.print("% LOAD RIGHT:");
-  Serial.print(nLoadRIGHT);
-  Serial.print("\t");
-  Serial.println();
+  Serial.print(" SEL:" + String(State_Button_SEL ));
+  Serial.print(" STA:" +  String(State_Button_STA ));
 
-  Serial.print("% sensorValueR_POST:");
-  Serial.print(sensorValueR_POST);
-  Serial.print("\t");
-  Serial.print("% sensorValueR_PRE:");
-  Serial.print(sensorValueR_PRE);
-  Serial.print("\t");
+  Serial.print(" X:" +  String(State_Button_X));
+  Serial.print(" Y:" + String(State_Button_Y ));
+  Serial.print(" H:" + String(State_Button_H ));
+  Serial.print(" MODE:" +  String(State_Button_FLAG));
 
+  digitalWrite(LED_LEFT, HIGH);digitalWrite(LED_MID, HIGH);digitalWrite(LED_RIGHT, HIGH);
+ 
+
+  Serial.print("\n========PADDLE======================================================================================================\n");
+
+  if (false)
+  {
+
+    Serial.println();
+    Serial.print("10 BIT L:");
+    Serial.print(sensorValueL);
+    Serial.print("\t");
+    Serial.print("10 BIT R:");
+    Serial.print(sensorValueR);
+
+    Serial.println();
+
+    Serial.print("% LOAD LEFT:");
+    Serial.print(nLoadLEFT);
+    Serial.print("\t");
+    Serial.print("% LOAD RIGHT:");
+    Serial.print(nLoadRIGHT);
+    Serial.print("\t");
+    Serial.println();
+
+    Serial.print("% sensorValueR_POST:");
+    Serial.print(sensorValueR_POST);
+    Serial.print("\t");
+    Serial.print("% sensorValueR_PRE:");
+    Serial.print(sensorValueR_PRE);
+    Serial.print("\t");
+
+  }
   Serial.println();
   Serial.print("% Timer_Loop:");
   Serial.print(Timer_Loop);
@@ -158,7 +178,7 @@ void setup() {
   pinMode(LED_LEFT, OUTPUT);   // initialize the LED pin as an output:
   pinMode(LED_RIGHT, OUTPUT);  // initialize the LED pin as an output:
   pinMode(LED_MID, OUTPUT);
-  pinMode(LED_MID, OUTPUT);
+
 
   pinMode(Button_LEFT, INPUT);   // initialize the pushbutton pin as an input:
   pinMode(Button_RIGHT, INPUT);  // initialize the pushbutton pin as an input:
@@ -184,7 +204,7 @@ void loop() {
   //===============================================================
   // Program SETUP
 
-  bool bDEBUG = false;
+  bool bDEBUG = true;
   bool bDEBUG_LED = true;
 
   if (bDEBUG) { delay(100); }  // slow down the program for debuging
@@ -199,72 +219,14 @@ void loop() {
   // read the state of the pushbutton value:
   // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
   //--------FIRE----------------------------------------------------------
-  Button_State_LEFT = digitalRead(Button_LEFT);
-  if (Button_State_LEFT == HIGH) {
-    // turn LED on:
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-    Joystick[1].setButton(0, 1);
-  } else {
-    // turn LED off:
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-    Joystick[1].setButton(0, 0);
-  }
-  //-----------FIRE-------------------------------------------------------
+  Button_State_LEFT = digitalRead(Button_LEFT); 
   Button_State_RIGHT = digitalRead(Button_RIGHT);
-  if (Button_State_RIGHT == HIGH) {
-    // turn LED on:
-    if (bDEBUG_LED) { digitalWrite(LED_RIGHT, HIGH); }
-    Joystick[0].setButton(1, 1);
-  } else {
-    // turn LED off:
-    if (bDEBUG_LED) { digitalWrite(LED_RIGHT, LOW); }
-    Joystick[0].setButton(1, 0);
-  }
-  //-------------MENU-----------------------------------------------------
   State_Button_SEL = digitalRead(Button_SEL);
-  if (State_Button_SEL == HIGH) {
-    Joystick[0].setButton(5, 1);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-  } else {
-    Joystick[0].setButton(5, 0);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-  }
-  //------------------------------------------------------------------
   State_Button_STA = digitalRead(Button_STA);
-  if (State_Button_STA == HIGH) {
-    Joystick[0].setButton(6, 1);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-  } else {
-    Joystick[0].setButton(6, 0);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-  }
-  //------------------------------------------------------------------
   State_Button_X = digitalRead(Button_X);
-  if (State_Button_X == HIGH) {
-    Joystick[0].setButton(2, 1);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-  } else {
-    Joystick[0].setButton(2, 0);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-  }
-  //------------------------------------------------------------------
   State_Button_Y = digitalRead(Button_Y);
-  if (State_Button_Y == HIGH) {
-    Joystick[0].setButton(3, 1);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-  } else {
-    Joystick[0].setButton(3, 0);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-  }
-  //------------------------------------------------------------------
   State_Button_H = digitalRead(Button_H);
-  if (State_Button_H == HIGH) {
-    Joystick[0].setButton(4, 1);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-  } else {
-    Joystick[0].setButton(4, 0);
-    if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-  }
+  
   //------------------------------------------------------------------
   //==================================================================
   // Analog Paddle
@@ -274,36 +236,7 @@ void loop() {
   sensorValueR = analogRead(sensorPinR);
   sensorValueL = analogRead(sensorPinL);
   //===============================================================================================
-  if (1 == 2)  // enable spinner
-               // read the value from the sensor:
-    if (Timer_Loop == 1) {
-      {
-        sensorValueR_PRE = sensorValueR_POST;
-        sensorValueL_PRE = sensorValueL_POST;
-        //Serial.print(millis());
-      }
-      sensorValueR = analogRead(sensorPinR);
-      sensorValueL = analogRead(sensorPinL);
 
-      sensorValueR_POST = sensorValueR / 50;  // make less sensitive to noise also reduces range -100 to 100
-      sensorValueL_POST = sensorValueL / 50;
-
-      if (sensorValueR_PRE > sensorValueR_POST) {
-        Joystick[0].setButton(1, 1);
-        if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-      } else {
-        Joystick[0].setButton(1, 0);
-        if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-      }
-
-      if (sensorValueR_PRE < sensorValueR_POST) {
-        Joystick[0].setButton(0, 1);
-        if (bDEBUG_LED) { digitalWrite(LED_MID, HIGH); }
-      } else {
-        Joystick[0].setButton(0, 0);
-        if (bDEBUG_LED) { digitalWrite(LED_MID, LOW); }
-      }
-    }
   //===============================================================================================
   sensorValueRMAX = 0;     // initial 0
   sensorValueRMIN = 1024;  // initial 1024
