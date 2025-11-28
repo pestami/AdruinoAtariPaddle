@@ -192,7 +192,8 @@ void loop()
   //===============================================================
   // Program SETUP  
 
-  bool bDEBUG=true;
+  //bool bDEBUG=true;
+  bool bDEBUG=false;
   bool bDEBUG_LED=true;
 
   if (bDEBUG) {delay(100);}  // slow down the program for debuging 
@@ -223,7 +224,7 @@ void loop()
           // turn LED on:
           if (bDEBUG_LED) 
           {digitalWrite(LED_LEFT, HIGH);
-          digitalWrite(LED_MIDDLE, HIGH);          
+          //digitalWrite(LED_MIDDLE, HIGH);          
           digitalWrite(LED_RIGHT, LOW);
            }
         } 
@@ -235,13 +236,43 @@ void loop()
           // turn LED on:
           if (bDEBUG_LED) 
           {digitalWrite(LED_RIGHT, HIGH);
-                    digitalWrite(LED_LEFT, LOW);
+          //digitalWrite(LED_LEFT, LOW);
           digitalWrite(LED_MIDDLE, LOW);
           }
         } 
   else {Joystick[0].setButton(0, 0);}
 //------------------------------------------------------------------
- 
+if (sensorModeValue>500 )
+{
+  if (State_Button_SEL== HIGH) {Joystick[0].setButton(1, 1);}
+  if (State_Button_STA== HIGH) {Joystick[0].setButton(2, 1);}
+  if (State_Button_X== HIGH) {Joystick[0].setButton(3, 1);}
+  if (State_Button_Y== HIGH) {Joystick[0].setButton(4, 1);}
+  if (State_Button_H== HIGH) {Joystick[0].setButton(5, 1);}
+
+  if (State_Button_SEL== LOW) {Joystick[0].setButton(1, 0);}
+  if (State_Button_STA== LOW) {Joystick[0].setButton(2, 0);}
+  if (State_Button_X== LOW) {Joystick[0].setButton(3, 0);}
+  if (State_Button_Y== LOW) {Joystick[0].setButton(4, 0);}
+  if (State_Button_H== LOW) {Joystick[0].setButton(5, 0);}
+}
+//------------------------------------------------------------------   
+
+//------------------------------------------------------------------
+if (sensorModeValue<500 )
+{
+  if (State_Button_SEL== HIGH) {Joystick[1].setButton(1, 1);}
+  if (State_Button_STA== HIGH) {Joystick[1].setButton(2, 1);}
+  if (State_Button_X== HIGH) {Joystick[1].setButton(3, 1);}
+  if (State_Button_Y== HIGH) {Joystick[1].setButton(4, 1);}
+  if (State_Button_H== HIGH) {Joystick[1].setButton(5, 1);}
+
+  if (State_Button_SEL== LOW) {Joystick[1].setButton(1, 0);}
+  if (State_Button_STA== LOW) {Joystick[1].setButton(2, 0);}
+  if (State_Button_X== LOW) {Joystick[1].setButton(3, 0);}
+  if (State_Button_Y== LOW) {Joystick[1].setButton(4, 0);}
+  if (State_Button_H== LOW) {Joystick[1].setButton(5, 0);}
+}
 //------------------------------------------------------------------   
 //==================================================================
 // Analog Paddle
